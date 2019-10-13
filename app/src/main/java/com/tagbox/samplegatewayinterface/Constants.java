@@ -2,24 +2,26 @@ package com.tagbox.samplegatewayinterface;
 
 public final class Constants {
 
-    public static final String INTENT_START_GATEWAY_APP = "com.tagbox.intent.start_gateway_app";
-    public static final String INTENT_FETCH_BREACH_DATA = "com.tagbox.intent.fetch_breach_data";
-    public static final String INTENT_GATEWAY_BREACH = "com.tagbox.intent.breach";
-    public static final String INTENT_SYNC_DONE = "com.tagbox.intent.sync_done";
-    public static final String BREACH_PARAMETERS = "breach_params";
-    public static final String BREACH_UPPER_LIMIT = "upperLimit";
-    public static final String BREACH_LOWER_LIMIT = "lowerLimit";
-    public static final String BREACH_LIMIT = "limit";
-    public static final String BREACH_TEMP = "temp";
-    public static final String BREACH_HUM = "hum";
-    public static final String BREACH_JERK = "jerk";
+    public static final String INTENT_START_SCANNER = "com.tagbox.intent.start_scanner";
+    public static final String INTENT_FETCH_SENSOR_DATA = "com.tagbox.intent.fetch_sensor_data";
     public static final String SENSOR_ID = "sensor_id";
-    public static final String APP_START_TIME = "start_time";
-    public static final String APP_END_TIME = "end_time";
-    public static final String LAST_SYNC_TIME = "time";
-    public static final String TEMP_BREACH = "temp_breach";
-    public static final String SHOCK_BREACH = "shock_breach";
-    public static final String HUMIDITY_BREACH = "humidity_breach";
-    public static final String RECENT_PARAMS = "recent_params";
+
+    public static final String INTENT_SENSOR_DATA = "com.tagbox.intent.sensor_data";
+    public static final String INTENT_TAGSYNC_ERROR = "com.tagbox.intent.tagsync_error";
+    public static final String INTENT_PERMISSION_CHECK = "com.tagbox.intent.permission_check";
+
+
+    public static final String SENSOR_DATA = "sensor_data";
+    public static final String ERROR_DATA = "error_data";
+    public static final String PERMISSION_CHECK = "permission_check";
+    public static final String BASE_URL = "https://api-manager-tagbox.azure-api.net/v1";
+    public static final String APK_VERSION_URL = BASE_URL + "/eng/get-app-version";
+    public static final String APK_DOWNLOAD_URL = BASE_URL + "/eng/download-app/tag_sync.apk";
+    public static final String APK_FILE_NAME = "tag_sync.apk";
+    public static final String API_HEADER_NAME = "ocm-subscription-key";
+    public static final String API_HEADER_VALUE = "fgaehfkhk%hsfhj&%hrkehkgh";
+
+    public static final String INTENT_RECEIVED_START_SCAN = "com.tagbox.intent.received_ss";
+    public static final String INTENT_RECEIVED_FETCH_DATA = "com.tagbox.intent.received_fd";
 
 }

@@ -6,54 +6,69 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import static com.tagbox.samplegatewayinterface.Constants.HUMIDITY_BREACH;
-import static com.tagbox.samplegatewayinterface.Constants.INTENT_GATEWAY_BREACH;
-import static com.tagbox.samplegatewayinterface.Constants.INTENT_SYNC_DONE;
-import static com.tagbox.samplegatewayinterface.Constants.LAST_SYNC_TIME;
-import static com.tagbox.samplegatewayinterface.Constants.RECENT_PARAMS;
-import static com.tagbox.samplegatewayinterface.Constants.SHOCK_BREACH;
-import static com.tagbox.samplegatewayinterface.Constants.TEMP_BREACH;
+import static com.tagbox.samplegatewayinterface.Constants.ERROR_DATA;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_PERMISSION_CHECK;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_RECEIVED_FETCH_DATA;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_RECEIVED_START_SCAN;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_SENSOR_DATA;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_TAGSYNC_ERROR;
+import static com.tagbox.samplegatewayinterface.Constants.PERMISSION_CHECK;
+import static com.tagbox.samplegatewayinterface.Constants.SENSOR_DATA;
 
 
-/**
- * Created by Suhas on 1/25/2017.
- */
 
-public class TagboxBroadcastReceiver extends BroadcastReceiver {
+/**   The data packet that comes in the INTENT_SENSOR_DATA will have the data field in the following format:
+//        {
+//        “sensorId” : “1901010000095”,
+//        “temperature” : 25.6,	// temperature data in Celcius
+//        “utcTimestamp” : 1567596493	// timestamp in unix epoch format
+//        }
+//
+//        The error data that comes will have the following format”
+//        {
+//        “errorCode” : 301,
+//        “errorMessage” : “Location is not enabled”
+//        }
+//
+//        Following are the possible error codes:
+//
+//        301 : location not enabled
+//        Ii.   302 :  bluetooth adapter not working
+//        Iii.  303: sensor not found
 
+//
+//        The permission check message will have the following format”
+//        {
+//        “permission_flag”: {
+ //            “location_permission” : false,
+//             “storage_permission” : “true”
+//          }
+//        }
+*/
+
+public class TagboxBroadcastReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
 
-
-        if (intent.getAction().equals(INTENT_GATEWAY_BREACH)) {
-
-            // persist following breach data in sharedprefs/ file to display data
-            // or whatever you want to by starting IntentService maybe
-            String temperatureBreach = intent.getStringExtra(TEMP_BREACH);
-            String shockBreach = intent.getStringExtra(SHOCK_BREACH);
-            String humidityBreach = intent.getStringExtra(HUMIDITY_BREACH);
-            String currentParams = intent.getStringExtra(RECENT_PARAMS);
-            Log.d("breach",  humidityBreach+" \n"+
-                    currentParams);
-            //this data is passed to disPlay data // you can check the values of array in interface activity code
-            Intent intentBreach = new Intent(context, InterfaceActivity.class);
-            if (temperatureBreach != null && shockBreach != null && humidityBreach != null) {
-                intentBreach.putExtra(TEMP_BREACH, temperatureBreach);
-                intentBreach.putExtra(SHOCK_BREACH, shockBreach);
-                intentBreach.putExtra(HUMIDITY_BREACH, humidityBreach);
-                intentBreach.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intentBreach);
-            }
-
-        } else if (intent.getAction().equals(INTENT_SYNC_DONE)) {
-
-            // pass last sync time of sensor to the interface activity to be displayed
-            Intent lastSyncTimeIntent = new Intent(context, InterfaceActivity.class);
-            lastSyncTimeIntent.putExtra(LAST_SYNC_TIME, intent.getStringExtra(LAST_SYNC_TIME));
-            lastSyncTimeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(lastSyncTimeIntent);
-            Toast.makeText(context, "Sensor synced till " + intent.getStringExtra("time"), Toast.LENGTH_LONG).show();
+        if (intent.getAction().equals(INTENT_SENSOR_DATA)){
+            String temperatureData = intent.getStringExtra(SENSOR_DATA);
+        }
+        if (intent.getAction().equals(INTENT_TAGSYNC_ERROR)){
+            String errorData = intent.getStringExtra(ERROR_DATA);
+        }
+        if (intent.getAction().equals(INTENT_PERMISSION_CHECK)){
+            String permissionCheck = intent.getStringExtra(PERMISSION_CHECK);
+        }
+        if (intent.getAction().equals(INTENT_RECEIVED_FETCH_DATA)){
+            Toast.makeText(context,"Fetch data request received by TagSync app",
+                    Toast.LENGTH_LONG).show();
+        }
+        if (intent.getAction().equals(INTENT_RECEIVED_START_SCAN)){
+            Toast.makeText(context,"Start scan request received by TagSync app",
+                    Toast.LENGTH_LONG).show();
         }
     }
 }
+
+

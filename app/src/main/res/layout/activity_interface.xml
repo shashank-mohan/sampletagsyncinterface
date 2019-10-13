@@ -22,7 +22,7 @@
         android:layout_marginTop="30dp"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
-        android:text="Start Trip" />
+        android:text="Start Scanner" />
 
     <Button
         android:id="@+id/fetch_button"
@@ -31,5 +31,23 @@
         android:layout_below="@+id/start_button"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
-        android:text="Fetch Breach" />
+        android:text="Fetch Data" />
+
+    <Button
+        android:id="@+id/install_button"
+        android:layout_width="170dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/fetch_button"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:text="Download and Install Apk" />
+
+    <Button
+        android:id="@+id/update_button"
+        android:layout_width="170dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/install_button"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:text="Update Apk" />
 </RelativeLayout>
