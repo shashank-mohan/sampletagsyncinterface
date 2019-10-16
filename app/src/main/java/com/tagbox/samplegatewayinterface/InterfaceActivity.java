@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.ArrayMap;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -39,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import okhttp3.OkHttpClient;
 
 import static com.tagbox.samplegatewayinterface.Constants.API_HEADER_NAME;
 import static com.tagbox.samplegatewayinterface.Constants.API_HEADER_VALUE;
@@ -172,7 +178,7 @@ public class InterfaceActivity extends AppCompatActivity {
             Intent fetchIntent = new Intent(INTENT_FETCH_SENSOR_DATA);
             //sensor id should look like the below format always
             // here a dummy sensor is entered
-            fetchIntent.putExtra(SENSOR_ID, "D7:B9:26:05:61:B6");
+            fetchIntent.putExtra(SENSOR_ID, "MX3EAE");
             fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             sendBroadcast(fetchIntent);
             return null;
@@ -186,58 +192,53 @@ public class InterfaceActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            final String[] result = {""};
-            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-            String url =APK_VERSION_URL;
-            StringRequest getRequest = new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>()
-                    {
-                        @Override
-                        public void onResponse(String response) {
-                            // response
-                            Log.d("Response", response);
-                            result[0] = response;
-                        }
-                    },
-                    new Response.ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO Auto-generated method stub
-                            Log.d("ERROR","error => "+error.toString());
-                            Toast.makeText(getApplicationContext(),"Error while fetching" +
-                                    " apk version "+error,Toast.LENGTH_LONG).show();
-                            result[0] = "";
-                        }
-                    }
-            ) {
-                @Override
-                public Map<String, String> getHeaders()  {
-                    Map<String, String>  params = new HashMap<String, String>();
-                    params.put(API_HEADER_NAME, API_HEADER_VALUE);
-                    return params;
-                }
-            };
-            queue.add(getRequest);
-            Log.d("resultVersion",result[0]+" version");
-            return result[0];
+
+            OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient.retryOnConnectionFailure();
+            okhttp3.Request request = new okhttp3.Request.Builder()
+                    .url(APK_VERSION_URL)
+                    .get()
+                    .addHeader(API_HEADER_NAME, API_HEADER_VALUE)
+                    .build();
+            //Log.d("response",bodyData+"");
+
+            try (okhttp3.Response response = okHttpClient.newCall(request).execute()){
+                //Log.d("response",response.body().string()+" "+response.code());
+                return response.body().string();
+            } catch (Exception ex) {
+                Log.d("login exception",ex.toString());
+                return "";
+            }
+
             // startTime and endTime in some time format or pass unix timestamp in UTC(pass long in that case)
         }
 
         @Override
         protected void onPostExecute(String version) {
             super.onPostExecute(version);
+            String versionValue="";
+            Log.d("version",version);
+            try {
+                JSONObject jsonObject = new JSONObject(version);
+                versionValue = jsonObject.getString("fwVersion");
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(),
+                        "Failed to fetch apk version",Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
 
-            if(!version.equals("")){
+            if(!versionValue.equals("")){
                 String currentVersion = getPackageVersion();
-                if(version.equals(currentVersion)){
-
+                if(versionValue.equals(currentVersion)){
+                    Toast.makeText(getApplicationContext(),
+                          "Apk is up to date",Toast.LENGTH_LONG).show();
+                }
+                else{
+                    new DownloadApk().execute();
                 }
             }
         }
     }
-
-
 
 
     public class DownloadApk extends AsyncTask<Void, Void, Boolean> {

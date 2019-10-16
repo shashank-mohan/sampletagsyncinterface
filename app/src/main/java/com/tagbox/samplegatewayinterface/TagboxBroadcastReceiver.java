@@ -52,10 +52,15 @@ public class TagboxBroadcastReceiver extends BroadcastReceiver{
     public void onReceive(final Context context, final Intent intent) {
 
         if (intent.getAction().equals(INTENT_SENSOR_DATA)){
+
             String temperatureData = intent.getStringExtra(SENSOR_DATA);
+            Toast.makeText(context,temperatureData,Toast.LENGTH_LONG).show();
         }
         if (intent.getAction().equals(INTENT_TAGSYNC_ERROR)){
+
             String errorData = intent.getStringExtra(ERROR_DATA);
+            Toast.makeText(context,errorData,
+                    Toast.LENGTH_LONG).show();
         }
         if (intent.getAction().equals(INTENT_PERMISSION_CHECK)){
             String permissionCheck = intent.getStringExtra(PERMISSION_CHECK);
