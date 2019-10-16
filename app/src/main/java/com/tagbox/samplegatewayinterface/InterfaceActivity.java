@@ -176,7 +176,7 @@ public class InterfaceActivity extends AppCompatActivity {
 
 
             Intent fetchIntent = new Intent(INTENT_FETCH_SENSOR_DATA);
-            //sensor id should look like the below format always
+            //sensor id should look like the below format
             // here a dummy sensor is entered
             fetchIntent.putExtra(SENSOR_ID, "MX3EAE");
             fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
