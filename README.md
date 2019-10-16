@@ -199,22 +199,22 @@ Calling this method will lead to TagSync APK responding with a broadcast that co
 
 The sensor data in response to this method is in JSON format and has a data field and a timestamp field in unix epoch format. The application picks up the latest telemetry packet of the relevant sensor device at each call. To ensure that the date is not stale, startScan method should be called at least 2 minutes before an attempt to fetch data.
 
-public class FetchSensorData extends AsyncTask\&lt;Void, Void, Void\&gt; {
-
-    public FetchSensorData() {
+    public class FetchSensorData extends AsyncTask\&lt;Void, Void, Void\&gt; {
+    
+        public FetchSensorData() {
+        }
+    
+        @Override
+        protected Void doInBackground(Void... params) {
+            Intent fetchIntent = new Intent(INTENT_FETCH_SENSOR_DATA);
+            //sensor id should look like the below format always
+            // here a dummy sensor is entered
+            fetchIntent.putExtra(SENSOR_ID, "MX34FE");
+            fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            sendBroadcast(fetchIntent);
+            return null;
+        }
     }
-
-    @Override
-    protected Void doInBackground(Void... params) {
-        Intent fetchIntent = new Intent(INTENT_FETCH_SENSOR_DATA);
-        //sensor id should look like the below format always
-        // here a dummy sensor is entered
-        fetchIntent.putExtra(SENSOR_ID, "MX34FE");
-        fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        sendBroadcast(fetchIntent);
-        return null;
-    }
-}
 
 Since, this method is always called after startScan method, it can be assumed that TagSync is already up and running and launch activity need not be called.
 
