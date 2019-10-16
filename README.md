@@ -36,67 +36,67 @@ The host application can download and setup TagSync in following steps:
 
 - Download TagSync apk from the given url (as declared in GitHub sample application)
 
-    
-    public class DownloadApk extends AsyncTask<Void, Void, Boolean> {
-    
-        public DownloadApk() {
-        }
-    
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            boolean result = false;
-            InputStream is = null;
-            FileOutputStream fos = null;
-            HttpURLConnection connection = null;
-            try {
-                String getRequestUrl = APK_DOWNLOAD_URL;
-                URL url = new URL(getRequestUrl);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty(API_HEADER_NAME,API_HEADER_VALUE);
-                connection.setChunkedStreamingMode(1000000);
-                connection.setConnectTimeout(240000);
-                connection.connect();
-    
-                // expect HTTP 200 OK for successful download
-                // instead of the file
-                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    return false;
-                }
-    
-                File sdcard = Environment.getExternalStorageDirectory();
-                File inputFile = new File(sdcard, APK_FILE_NAME);
-                fos = new FileOutputStream(inputFile);
-                is = connection.getInputStream();
-                byte[] buffer = new byte[1024];
-                int len1 = 0;
-                while ((len1 = is.read(buffer)) != -1) {
-    
-                    fos.write(buffer, 0, len1);
-                }
-                connection.disconnect();
-                fos.flush();
-                result = true;
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(),"Error while downloading" +
-                        " apk :"+e,Toast.LENGTH_LONG).show();
-                Log.e("error", e.toString());
-                result = false;
+        
+        public class DownloadApk extends AsyncTask<Void, Void, Boolean> {
+        
+            public DownloadApk() {
             }
-    
-            return result;
-            // startTime and endTime in some time format or pass unix timestamp in UTC(pass long in that case)
-        }
-    
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            Log.d("downloadStatus",aBoolean+"");
-            if(aBoolean){
-                installApk();
+        
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                boolean result = false;
+                InputStream is = null;
+                FileOutputStream fos = null;
+                HttpURLConnection connection = null;
+                try {
+                    String getRequestUrl = APK_DOWNLOAD_URL;
+                    URL url = new URL(getRequestUrl);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setRequestProperty(API_HEADER_NAME,API_HEADER_VALUE);
+                    connection.setChunkedStreamingMode(1000000);
+                    connection.setConnectTimeout(240000);
+                    connection.connect();
+        
+                    // expect HTTP 200 OK for successful download
+                    // instead of the file
+                    if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                        return false;
+                    }
+        
+                    File sdcard = Environment.getExternalStorageDirectory();
+                    File inputFile = new File(sdcard, APK_FILE_NAME);
+                    fos = new FileOutputStream(inputFile);
+                    is = connection.getInputStream();
+                    byte[] buffer = new byte[1024];
+                    int len1 = 0;
+                    while ((len1 = is.read(buffer)) != -1) {
+        
+                        fos.write(buffer, 0, len1);
+                    }
+                    connection.disconnect();
+                    fos.flush();
+                    result = true;
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(),"Error while downloading" +
+                            " apk :"+e,Toast.LENGTH_LONG).show();
+                    Log.e("error", e.toString());
+                    result = false;
+                }
+        
+                return result;
+                // startTime and endTime in some time format or pass unix timestamp in UTC(pass long in that case)
+            }
+        
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                Log.d("downloadStatus",aBoolean+"");
+                if(aBoolean){
+                    installApk();
+                }
             }
         }
-    }
 
 
 - Setup a file provider to access the file uri for the downloaded file in the host application&#39;s manifest
