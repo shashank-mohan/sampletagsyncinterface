@@ -221,30 +221,30 @@ Since, this method is always called after startScan method, it can be assumed th
 **4.** **Receiving data through broadcast receiver**
 
 This code piece demonstrates how to receive the data via a broadcast receiver on the host application. This broadcast receiver needs to be explicitly registered in the activity or service in the host app.
-
-public class TagboxBroadcastReceiver extends BroadcastReceiver{
-
-    @Override
-    public void onReceive(final Context context, final Intent intent) {
-
-        if (intent.getAction().equals(INTENT_SENSOR_DATA)){
-            String temperatureData = intent.getStringExtra(SENSOR_DATA);
-        }
-        if (intent.getAction().equals(INTENT_TAGSYNC_ERROR)){
-            String errorData = intent.getStringExtra(ERROR_DATA);
-        }
-        if (intent.getAction().equals(INTENT_PERMISSION_CHECK)){
-            String permissionCheck = intent.getStringExtra(PERMISSION_CHECK);
-        }
-        if (intent.getAction().equals(INTENT_RECEIVED_FETCH_DATA)){
-            Toast.makeText(context,"Fetch data request received by TagSync" ,
-                    Toast.LENGTH_LONG).show();
-        }
-        if (intent.getAction().equals(INTENT_RECEIVED_START_SCAN)){
-            Toast.makeText(context,"Start scan request received by TagSync",
-                    Toast.LENGTH_LONG).show();
-        }
-    }
+    
+    public class TagboxBroadcastReceiver extends BroadcastReceiver{
+    
+            @Override
+            public void onReceive(final Context context, final Intent intent) {
+        
+                if (intent.getAction().equals(INTENT_SENSOR_DATA)){
+                    String temperatureData = intent.getStringExtra(SENSOR_DATA);
+                }
+                if (intent.getAction().equals(INTENT_TAGSYNC_ERROR)){
+                    String errorData = intent.getStringExtra(ERROR_DATA);
+                }
+                if (intent.getAction().equals(INTENT_PERMISSION_CHECK)){
+                    String permissionCheck = intent.getStringExtra(PERMISSION_CHECK);
+                }
+                if (intent.getAction().equals(INTENT_RECEIVED_FETCH_DATA)){
+                    Toast.makeText(context,"Fetch data request received by TagSync" ,
+                            Toast.LENGTH_LONG).show();
+                }
+                if (intent.getAction().equals(INTENT_RECEIVED_START_SCAN)){
+                    Toast.makeText(context,"Start scan request received by TagSync",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
     }
 
 The data packet that comes in the INTENT_SENSOR_DATA will have the data field in the following format:
