@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PermissionInfo;
 import android.net.Uri;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +37,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.Permissions;
@@ -128,6 +132,7 @@ public class InterfaceActivity extends AppCompatActivity {
 
         tagboxBroadcastReceiver = new TagboxBroadcastReceiver();
         registerReceiver(tagboxBroadcastReceiver, makeTBoxUpdateIntentFilter());
+
 
     }
 
@@ -268,8 +273,7 @@ public class InterfaceActivity extends AppCompatActivity {
                     return false;
                 }
 
-                File sdcard = Environment.getExternalStorageDirectory();
-                File inputFile = new File(sdcard, APK_FILE_NAME);
+                File inputFile = new File(getExternalFilesDir(null), APK_FILE_NAME);
                 fos = new FileOutputStream(inputFile);
                 is = connection.getInputStream();
                 byte[] buffer = new byte[1024];
@@ -282,8 +286,8 @@ public class InterfaceActivity extends AppCompatActivity {
                 fos.flush();
                 result = true;
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(),"Error while downloading" +
-                        " apk :"+e,Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(),"Error while downloading" +
+//                        " apk :"+e,Toast.LENGTH_LONG).show();
                 Log.e("error", e.toString());
                 result = false;
             }
@@ -306,8 +310,7 @@ public class InterfaceActivity extends AppCompatActivity {
 
     public void installApk(){
         try {
-            File directory = Environment.getExternalStorageDirectory();
-            File file = new File(directory, APK_FILE_NAME);
+            File file = new File(getExternalFilesDir(null), APK_FILE_NAME);
             Uri fileUri = Uri.fromFile(file);
             if (Build.VERSION.SDK_INT >= 24) {
                 fileUri = FileProvider.getUriForFile(this, "com.tagbox.tag_sync.fileprovider",
