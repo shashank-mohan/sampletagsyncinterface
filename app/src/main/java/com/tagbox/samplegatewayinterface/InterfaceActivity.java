@@ -33,7 +33,9 @@ import static com.tagbox.samplegatewayinterface.Constants.APK_DOWNLOAD_URL;
 import static com.tagbox.samplegatewayinterface.Constants.APK_FILE_NAME;
 import static com.tagbox.samplegatewayinterface.Constants.APK_VERSION_URL;
 import static com.tagbox.samplegatewayinterface.Constants.DEMO_SENSOR_CLIENT_ID;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_FETCH_LOCATION_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_FETCH_SENSOR_DATA;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_LOCATION_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_PERMISSION_CHECK;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_RECEIVED_FETCH_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_RECEIVED_START_SCAN;
@@ -45,7 +47,8 @@ import static com.tagbox.samplegatewayinterface.Constants.SENSOR_ID;
 public class InterfaceActivity extends AppCompatActivity {
 
     private Button startButton;
-    private Button fetchButton;
+    private Button fetchSensorButton;
+    private Button fetchLocationButton;
     private Button installButton;
     private Button updateButton;
 
@@ -58,7 +61,8 @@ public class InterfaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_interface);
 
         startButton = (Button) findViewById(R.id.start_button);
-        fetchButton = (Button) findViewById(R.id.fetch_button);
+        fetchSensorButton = (Button) findViewById(R.id.fetch_sensor_button);
+        fetchLocationButton = (Button) findViewById(R.id.fetch_location_button);
         installButton = (Button) findViewById(R.id.install_button);
         updateButton = (Button) findViewById(R.id.update_button);
 
@@ -71,9 +75,15 @@ public class InterfaceActivity extends AppCompatActivity {
         });
 
         // fetching sensor data for a sensor
-        fetchButton.setOnClickListener(new View.OnClickListener() {
+        fetchSensorButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 new FetchSensorData().execute();
+            }
+        });
+
+        fetchLocationButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                new FetchLocationData().execute();
             }
         });
 
@@ -118,6 +128,7 @@ public class InterfaceActivity extends AppCompatActivity {
     private static IntentFilter makeTBoxUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(INTENT_SENSOR_DATA);
+        intentFilter.addAction(INTENT_LOCATION_DATA);
         intentFilter.addAction(INTENT_TAGSYNC_ERROR);
         intentFilter.addAction(INTENT_PERMISSION_CHECK);
         intentFilter.addAction(INTENT_RECEIVED_FETCH_DATA);
@@ -162,6 +173,23 @@ public class InterfaceActivity extends AppCompatActivity {
             //sensor id should look like the below format
             // here a dummy sensor is entered
             fetchIntent.putExtra(SENSOR_ID, DEMO_SENSOR_CLIENT_ID);
+            fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            sendBroadcast(fetchIntent);
+            return null;
+        }
+    }
+
+    public class FetchLocationData extends AsyncTask<Void, Void, Void> {
+
+        public FetchLocationData() {
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            Intent fetchIntent = new Intent(INTENT_FETCH_LOCATION_DATA);
+            //sensor id should look like the below format
+            // here a dummy sensor is entered
             fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             sendBroadcast(fetchIntent);
             return null;
@@ -338,4 +366,9 @@ public class InterfaceActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        unregisterReceiver(tagboxBroadcastReceiver);
+        super.onStop();
+    }
 }

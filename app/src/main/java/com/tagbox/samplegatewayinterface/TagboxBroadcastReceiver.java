@@ -7,11 +7,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import static com.tagbox.samplegatewayinterface.Constants.ERROR_DATA;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_LOCATION_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_PERMISSION_CHECK;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_RECEIVED_FETCH_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_RECEIVED_START_SCAN;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_SENSOR_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_TAGSYNC_ERROR;
+import static com.tagbox.samplegatewayinterface.Constants.LOCATION_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.PERMISSION_CHECK;
 import static com.tagbox.samplegatewayinterface.Constants.SENSOR_DATA;
 
@@ -55,6 +57,11 @@ public class TagboxBroadcastReceiver extends BroadcastReceiver{
 
             String temperatureData = intent.getStringExtra(SENSOR_DATA);
             Toast.makeText(context,temperatureData,Toast.LENGTH_LONG).show();
+        }
+        if (intent.getAction().equals(INTENT_LOCATION_DATA)){
+
+            String locationData = intent.getStringExtra(LOCATION_DATA);
+            Toast.makeText(context,locationData,Toast.LENGTH_LONG).show();
         }
         if (intent.getAction().equals(INTENT_TAGSYNC_ERROR)){
 

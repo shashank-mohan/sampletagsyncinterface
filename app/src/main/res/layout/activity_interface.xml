@@ -25,19 +25,28 @@
         android:text="Start Scanner" />
 
     <Button
-        android:id="@+id/fetch_button"
+        android:id="@+id/fetch_sensor_button"
         android:layout_width="170dp"
         android:layout_marginTop="30dp"
         android:layout_below="@+id/start_button"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
-        android:text="Fetch Data" />
+        android:text="Fetch Sensor Data" />
+
+    <Button
+        android:id="@+id/fetch_location_button"
+        android:layout_width="170dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/fetch_sensor_button"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:text="Fetch Location Data" />
 
     <Button
         android:id="@+id/install_button"
         android:layout_width="170dp"
         android:layout_marginTop="30dp"
-        android:layout_below="@+id/fetch_button"
+        android:layout_below="@+id/fetch_location_button"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
         android:text="Download and Install Apk" />
