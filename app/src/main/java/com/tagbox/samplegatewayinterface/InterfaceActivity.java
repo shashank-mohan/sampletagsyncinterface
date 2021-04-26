@@ -1,35 +1,20 @@
 package com.tagbox.samplegatewayinterface;
 
-import android.app.ActivityManager;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PermissionInfo;
 import android.net.Uri;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Environment;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
-import android.util.ArrayMap;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,16 +22,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.Permissions;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import okhttp3.OkHttpClient;
 
@@ -55,6 +32,7 @@ import static com.tagbox.samplegatewayinterface.Constants.API_HEADER_VALUE;
 import static com.tagbox.samplegatewayinterface.Constants.APK_DOWNLOAD_URL;
 import static com.tagbox.samplegatewayinterface.Constants.APK_FILE_NAME;
 import static com.tagbox.samplegatewayinterface.Constants.APK_VERSION_URL;
+import static com.tagbox.samplegatewayinterface.Constants.DEMO_SENSOR_CLIENT_ID;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_FETCH_SENSOR_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_PERMISSION_CHECK;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_RECEIVED_FETCH_DATA;
@@ -183,7 +161,7 @@ public class InterfaceActivity extends AppCompatActivity {
             Intent fetchIntent = new Intent(INTENT_FETCH_SENSOR_DATA);
             //sensor id should look like the below format
             // here a dummy sensor is entered
-            fetchIntent.putExtra(SENSOR_ID, "MX3EAE");
+            fetchIntent.putExtra(SENSOR_ID, DEMO_SENSOR_CLIENT_ID);
             fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             sendBroadcast(fetchIntent);
             return null;
@@ -272,8 +250,8 @@ public class InterfaceActivity extends AppCompatActivity {
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     return false;
                 }
-
-                File inputFile = new File(getExternalFilesDir(null), APK_FILE_NAME);
+                File sdcard = Environment.getExternalStorageDirectory();
+                File inputFile = new File(sdcard, APK_FILE_NAME);
                 fos = new FileOutputStream(inputFile);
                 is = connection.getInputStream();
                 byte[] buffer = new byte[1024];
@@ -310,7 +288,8 @@ public class InterfaceActivity extends AppCompatActivity {
 
     public void installApk(){
         try {
-            File file = new File(getExternalFilesDir(null), APK_FILE_NAME);
+            File sdcard = Environment.getExternalStorageDirectory();
+            File file = new File(sdcard, APK_FILE_NAME);
             Uri fileUri = Uri.fromFile(file);
             if (Build.VERSION.SDK_INT >= 24) {
                 fileUri = FileProvider.getUriForFile(this, "com.tagbox.tag_sync.fileprovider",
