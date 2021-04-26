@@ -33,7 +33,7 @@ import static com.tagbox.samplegatewayinterface.Constants.APK_DOWNLOAD_URL;
 import static com.tagbox.samplegatewayinterface.Constants.APK_FILE_NAME;
 import static com.tagbox.samplegatewayinterface.Constants.APK_VERSION_URL;
 import static com.tagbox.samplegatewayinterface.Constants.DEMO_SENSOR_CLIENT_ID;
-import static com.tagbox.samplegatewayinterface.Constants.INTENT_FETCH_LOCATION_DATA;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_FETCH_SENSOR_LOCATION_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_FETCH_SENSOR_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_LOCATION_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_PERMISSION_CHECK;
@@ -47,8 +47,8 @@ import static com.tagbox.samplegatewayinterface.Constants.SENSOR_ID;
 public class InterfaceActivity extends AppCompatActivity {
 
     private Button startButton;
-    private Button fetchSensorButton;
-    private Button fetchLocationButton;
+    private Button fetchSensorDataButton;
+    private Button fetchSensorLocationButton;
     private Button installButton;
     private Button updateButton;
 
@@ -61,8 +61,8 @@ public class InterfaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_interface);
 
         startButton = (Button) findViewById(R.id.start_button);
-        fetchSensorButton = (Button) findViewById(R.id.fetch_sensor_button);
-        fetchLocationButton = (Button) findViewById(R.id.fetch_location_button);
+        fetchSensorDataButton = (Button) findViewById(R.id.fetch_sensor_button);
+        fetchSensorLocationButton = (Button) findViewById(R.id.fetch_location_button);
         installButton = (Button) findViewById(R.id.install_button);
         updateButton = (Button) findViewById(R.id.update_button);
 
@@ -75,15 +75,15 @@ public class InterfaceActivity extends AppCompatActivity {
         });
 
         // fetching sensor data for a sensor
-        fetchSensorButton.setOnClickListener(new View.OnClickListener() {
+        fetchSensorDataButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 new FetchSensorData().execute();
             }
         });
 
-        fetchLocationButton.setOnClickListener(new View.OnClickListener() {
+        fetchSensorLocationButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new FetchLocationData().execute();
+                new FetchSensorLocationData().execute();
             }
         });
 
@@ -178,15 +178,16 @@ public class InterfaceActivity extends AppCompatActivity {
         }
     }
 
-    public class FetchLocationData extends AsyncTask<Void, Void, Void> {
+    public class FetchSensorLocationData extends AsyncTask<Void, Void, Void> {
 
-        public FetchLocationData() {
+        public FetchSensorLocationData() {
         }
 
         @Override
         protected Void doInBackground(Void... params) {
 
-            Intent fetchIntent = new Intent(INTENT_FETCH_LOCATION_DATA);
+            Intent fetchIntent = new Intent(INTENT_FETCH_SENSOR_LOCATION_DATA);
+            fetchIntent.putExtra(SENSOR_ID, DEMO_SENSOR_CLIENT_ID);
             //sensor id should look like the below format
             // here a dummy sensor is entered
             fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);

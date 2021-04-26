@@ -4,7 +4,7 @@ public final class Constants {
 
     public static final String INTENT_START_SCANNER = "com.tagbox.intent.start_scanner";
     public static final String INTENT_FETCH_SENSOR_DATA = "com.tagbox.intent.fetch_sensor_data";
-    public static final String INTENT_FETCH_LOCATION_DATA = "com.tagbox.intent.fetch_location_data";
+    public static final String INTENT_FETCH_SENSOR_LOCATION_DATA = "com.tagbox.intent.fetch_location_data";
     public static final String SENSOR_ID = "sensor_id";
 
     public static final String INTENT_SENSOR_DATA = "com.tagbox.intent.sensor_data";
