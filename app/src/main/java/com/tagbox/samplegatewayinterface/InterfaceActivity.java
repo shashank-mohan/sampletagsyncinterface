@@ -168,7 +168,6 @@ public class InterfaceActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
 
-
             Intent fetchIntent = new Intent(INTENT_FETCH_SENSOR_DATA);
             //sensor id should look like the below format
             // here a dummy sensor is entered
@@ -367,8 +366,8 @@ public class InterfaceActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         unregisterReceiver(tagboxBroadcastReceiver);
-        super.onStop();
+        super.onDestroy();
     }
 }

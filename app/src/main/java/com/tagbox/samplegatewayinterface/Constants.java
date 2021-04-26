@@ -22,8 +22,7 @@ public final class Constants {
 
     public static final String BASE_URL = "https://api-manager-tagbox.azure-api.net/v2/";
     public static final String COMPANY_NAME = "company_name";
-    //public static final String API_HEADER_VALUE = "bweeerdn8cd249319a09ab038d21b660";
-    public static final String API_HEADER_VALUE = "baa90b518cd249319a09ab038d21b660";
+    public static final String API_HEADER_VALUE = "bweeerdn8cd249319a09ab038d21b660";
 
     public static final String APK_VERSION_URL = BASE_URL + COMPANY_NAME+ "/eng/get-app-version/tag_sync.apk";
     public static final String APK_DOWNLOAD_URL = BASE_URL + COMPANY_NAME+ "/eng/download-app/tag_sync.apk";
