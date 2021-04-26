@@ -228,18 +228,19 @@ Since, this method is always called after startScan method, it can be assumed th
 **4.** **Calling fetchLocationData method from the host app:**
 
 
-The location data in response to this method is in JSON format and has latitude, longitude and a timestamp field in unix epoch format. The application picks up the latest location packet. 
+The node location data is fetched in same way as fetching sensor temperature data.
 
-    public class FetchLocationData extends AsyncTask<Void, Void, Void> {
+   
+   public class FetchSensorLocationData extends AsyncTask<Void, Void, Void> {
 
-        public FetchLocationData() {
+        public FetchSensorLocationData() {
         }
 
         @Override
         protected Void doInBackground(Void... params) {
 
-
-            Intent fetchIntent = new Intent(INTENT_FETCH_LOCATION_DATA);
+            Intent fetchIntent = new Intent(INTENT_FETCH_SENSOR_LOCATION_DATA);
+            fetchIntent.putExtra(SENSOR_ID, DEMO_SENSOR_CLIENT_ID);
             //sensor id should look like the below format
             // here a dummy sensor is entered
             fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
@@ -247,6 +248,8 @@ The location data in response to this method is in JSON format and has latitude,
             return null;
         }
     }
+
+
 
 **5.** **Receiving data through broadcast receiver**
 
