@@ -34,6 +34,13 @@ Sample Host Application source code : [https://github.com/shashank-mohan/samplet
 
 The host application can download and setup TagSync in following steps:
 
+Following variables in constants folder to be used as provided by Tagbox:
+
+    public static final String DEMO_SENSOR_CLIENT_ID = "MX3EAE";  // to be taken from list of sensor ids provided by Tagbox team
+
+    public static final String BASE_URL = "https://api-manager-tagbox.azure-api.net/v1";   
+    public static final String API_HEADER_VALUE = "baa90b518cd249319a09ab038d21b660";     // base URL and api header values to be provided by Tagbox team  
+
 - Download TagSync apk from the given url (as declared in GitHub sample application)
 
         
@@ -209,7 +216,7 @@ The sensor data in response to this method is in JSON format and has a data fiel
             Intent fetchIntent = new Intent(INTENT_FETCH_SENSOR_DATA);
             //sensor id should look like the below format always
             // here a dummy sensor is entered
-            fetchIntent.putExtra(SENSOR_ID, "MX34FE");
+            fetchIntent.putExtra(SENSOR_ID, DEMO_SENSOR_CLIENT_ID);
             fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             sendBroadcast(fetchIntent);
             return null;
