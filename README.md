@@ -38,8 +38,8 @@ Following variables in constants folder to be used as provided by Tagbox:
 
     public static final String DEMO_SENSOR_CLIENT_ID = "MX3EAE";  // to be taken from list of sensor ids provided by Tagbox team
 
-    public static final String BASE_URL = "https://api-manager-tagbox.azure-api.net/v1";   
-    public static final String API_HEADER_VALUE = "baa90b518cd249319a09ab038d21b660";     // base URL and api header values to be provided by Tagbox team  
+    public static final String COMPANY_NAME = "company_name";
+    public static final String API_HEADER_VALUE = "bweeerdn8cd249319a09ab038d21b660";     // company name and api header values to be provided by Tagbox team  
 
 - Download TagSync apk from the given url (as declared in GitHub sample application)
 
@@ -200,7 +200,7 @@ Recommended: In latest Android versions, a background application cannot be invo
         }
     }
 
- **3.** **Calling fetchData method from the host app:**
+ **3.** **Calling fetchSensorData method from the host app:**
 
 Calling this method will lead to TagSync APK responding with a broadcast that contains data or an error message that is illustrated in the following section. The communication of the host application with TagSync APK is through Android broadcasts received on the registered broadcast receiver
 
@@ -225,7 +225,30 @@ The sensor data in response to this method is in JSON format and has a data fiel
 
 Since, this method is always called after startScan method, it can be assumed that TagSync is already up and running and launch activity need not be called.
 
-**4.** **Receiving data through broadcast receiver**
+**4.** **Calling fetchLocationData method from the host app:**
+
+
+The location data in response to this method is in JSON format and has latitude, longitude and a timestamp field in unix epoch format. The application picks up the latest location packet. 
+
+    public class FetchLocationData extends AsyncTask<Void, Void, Void> {
+
+        public FetchLocationData() {
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+
+            Intent fetchIntent = new Intent(INTENT_FETCH_LOCATION_DATA);
+            //sensor id should look like the below format
+            // here a dummy sensor is entered
+            fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            sendBroadcast(fetchIntent);
+            return null;
+        }
+    }
+
+**5.** **Receiving data through broadcast receiver**
 
 This code piece demonstrates how to receive the data via a broadcast receiver on the host application. This broadcast receiver needs to be explicitly registered in the activity or service in the host app.
     
@@ -277,6 +300,7 @@ Following are the possible error codes:
 - 302 :  bluetooth adapter not working
 - 303: sensor data not found
 - 306: Sensor mapping not found. Need network to fetch sensor mapping
+- 307: Location data is not available. Check locations settings
 
 The permission check message will have the following format&quot;
 
