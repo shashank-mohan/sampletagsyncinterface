@@ -1,5 +1,7 @@
 package com.tagbox.samplegatewayinterface;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -24,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 
@@ -33,6 +36,7 @@ import static com.tagbox.samplegatewayinterface.Constants.APK_DOWNLOAD_URL;
 import static com.tagbox.samplegatewayinterface.Constants.APK_FILE_NAME;
 import static com.tagbox.samplegatewayinterface.Constants.APK_VERSION_URL;
 import static com.tagbox.samplegatewayinterface.Constants.DEMO_SENSOR_CLIENT_ID;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_CHECK_TAGSYNC_SERVICE;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_FETCH_SENSOR_LOCATION_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_FETCH_SENSOR_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_LOCATION_DATA;
@@ -42,6 +46,7 @@ import static com.tagbox.samplegatewayinterface.Constants.INTENT_RECEIVED_START_
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_SENSOR_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_START_SCANNER;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_TAGSYNC_ERROR;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_TAGSYNC_RUNNING_STATUS;
 import static com.tagbox.samplegatewayinterface.Constants.SENSOR_ID;
 
 public class InterfaceActivity extends AppCompatActivity {
@@ -65,6 +70,8 @@ public class InterfaceActivity extends AppCompatActivity {
         fetchSensorLocationButton = (Button) findViewById(R.id.fetch_location_button);
         installButton = (Button) findViewById(R.id.install_button);
         updateButton = (Button) findViewById(R.id.update_button);
+
+        new CheckAppRunning().execute();
 
         //start TagSync scanner
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +137,7 @@ public class InterfaceActivity extends AppCompatActivity {
         intentFilter.addAction(INTENT_SENSOR_DATA);
         intentFilter.addAction(INTENT_LOCATION_DATA);
         intentFilter.addAction(INTENT_TAGSYNC_ERROR);
+        intentFilter.addAction(INTENT_TAGSYNC_RUNNING_STATUS);
         intentFilter.addAction(INTENT_PERMISSION_CHECK);
         intentFilter.addAction(INTENT_RECEIVED_FETCH_DATA);
         intentFilter.addAction(INTENT_RECEIVED_START_SCAN);
@@ -193,6 +201,37 @@ public class InterfaceActivity extends AppCompatActivity {
             fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             sendBroadcast(fetchIntent);
             return null;
+        }
+    }
+
+    public class CheckAppRunning extends AsyncTask<Void, Void, Boolean> {
+
+        public CheckAppRunning() {
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            Intent fetchIntent = new Intent(INTENT_CHECK_TAGSYNC_SERVICE);
+            //sensor id should look like the below format
+            // here a dummy sensor is entered
+            fetchIntent.putExtra(SENSOR_ID, DEMO_SENSOR_CLIENT_ID);
+            fetchIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            sendBroadcast(fetchIntent);
+            return false;
+//            final ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+//            final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+//            if (procInfos != null)
+//            {
+//                for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
+//                    Log.d("process",processInfo.processName);
+//                    if (processInfo.processName.equals("com.tagbox.tag_sync")) {
+//
+//                        return true;
+//                    }
+//                }
+//            }
+//            return false;
         }
     }
 
@@ -276,6 +315,7 @@ public class InterfaceActivity extends AppCompatActivity {
                 // expect HTTP 200 OK for successful download
                 // instead of the file
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    //Log.e("error", connection.getResponseCode()+"");
                     return false;
                 }
                 File sdcard = Environment.getExternalStorageDirectory();
@@ -364,6 +404,22 @@ public class InterfaceActivity extends AppCompatActivity {
             startActivity(launchIntent);//null pointer check in case package name was not found
         }
 
+    }
+
+    public static boolean isAppRunning(final Context context, final String packageName) {
+        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+        if (procInfos != null)
+        {
+            for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
+                Log.d("process",processInfo.processName);
+                if (processInfo.processName.equals(packageName)) {
+
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override

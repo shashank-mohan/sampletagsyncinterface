@@ -13,10 +13,11 @@ import static com.tagbox.samplegatewayinterface.Constants.INTENT_RECEIVED_FETCH_
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_RECEIVED_START_SCAN;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_SENSOR_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.INTENT_TAGSYNC_ERROR;
+import static com.tagbox.samplegatewayinterface.Constants.INTENT_TAGSYNC_RUNNING_STATUS;
 import static com.tagbox.samplegatewayinterface.Constants.LOCATION_DATA;
 import static com.tagbox.samplegatewayinterface.Constants.PERMISSION_CHECK;
 import static com.tagbox.samplegatewayinterface.Constants.SENSOR_DATA;
-
+import static com.tagbox.samplegatewayinterface.Constants.STATUS;
 
 
 /**   The data packet that comes in the INTENT_SENSOR_DATA will have the data field in the following format:
@@ -67,6 +68,12 @@ public class TagboxBroadcastReceiver extends BroadcastReceiver{
 
             String errorData = intent.getStringExtra(ERROR_DATA);
             Toast.makeText(context,errorData,
+                    Toast.LENGTH_LONG).show();
+        }
+        if (intent.getAction().equals(INTENT_TAGSYNC_RUNNING_STATUS)){
+
+            boolean status = intent.getBooleanExtra(STATUS,false);
+            Toast.makeText(context,"is TagSync service Running : "+status,
                     Toast.LENGTH_LONG).show();
         }
         if (intent.getAction().equals(INTENT_PERMISSION_CHECK)){
