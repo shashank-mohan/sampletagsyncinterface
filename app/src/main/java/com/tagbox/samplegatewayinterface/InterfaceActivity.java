@@ -308,7 +308,7 @@ public class InterfaceActivity extends AppCompatActivity {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty(API_HEADER_NAME,API_HEADER_VALUE);
-                //connection.setChunkedStreamingMode(1000000);
+                connection.setChunkedStreamingMode(1000000);
                 connection.setConnectTimeout(240000);
                 connection.connect();
 
