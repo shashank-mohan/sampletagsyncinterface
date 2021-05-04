@@ -308,7 +308,7 @@ public class InterfaceActivity extends AppCompatActivity {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty(API_HEADER_NAME,API_HEADER_VALUE);
-                connection.setChunkedStreamingMode(1000000);
+                //connection.setChunkedStreamingMode(1000000);
                 connection.setConnectTimeout(240000);
                 connection.connect();
 
@@ -318,14 +318,20 @@ public class InterfaceActivity extends AppCompatActivity {
                     //Log.e("error", connection.getResponseCode()+"");
                     return false;
                 }
-                File sdcard = Environment.getExternalStorageDirectory();
-                File inputFile = new File(sdcard, APK_FILE_NAME);
-                fos = new FileOutputStream(inputFile);
+
+                File fileDirectory = getFilesDir();
+                File apkDirectory = new File(fileDirectory,"files");
+                if(!apkDirectory.isFile()) {
+                    apkDirectory.mkdir();
+                }
+                File apkFile = new File(apkDirectory,APK_FILE_NAME);
+
+
+                fos = new FileOutputStream(apkFile);
                 is = connection.getInputStream();
                 byte[] buffer = new byte[1024];
                 int len1 = 0;
                 while ((len1 = is.read(buffer)) != -1) {
-
                     fos.write(buffer, 0, len1);
                 }
                 connection.disconnect();
@@ -356,12 +362,13 @@ public class InterfaceActivity extends AppCompatActivity {
 
     public void installApk(){
         try {
-            File sdcard = Environment.getExternalStorageDirectory();
-            File file = new File(sdcard, APK_FILE_NAME);
-            Uri fileUri = Uri.fromFile(file);
+            File fileDirectory = getFilesDir();
+            File apkDirectory = new File(fileDirectory,"files");
+            File apkFile = new File(apkDirectory,APK_FILE_NAME);
+            Uri fileUri = Uri.fromFile(apkFile);
             if (Build.VERSION.SDK_INT >= 24) {
                 fileUri = FileProvider.getUriForFile(this, "com.tagbox.tag_sync.fileprovider",
-                        file);
+                        apkFile);
             }
             Log.d("uri",fileUri.getPath());
 
